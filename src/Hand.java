@@ -4,6 +4,7 @@ import processing.core.PApplet;
 
 public class Hand {
     private ArrayList<Card> cards;
+    public String name = "";
     
     public Hand() {
         cards = new ArrayList<>();
@@ -23,7 +24,9 @@ public class Hand {
         }
         return null;
     }
-    
+    public String getName() {
+        return name;
+    }
     public int getSize() {
         return cards.size();
     }

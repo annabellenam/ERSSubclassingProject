@@ -3,14 +3,14 @@ import java.util.Collections;
 
 import processing.core.PApplet;
 
-public class CardGame {
+public class ERS extends CardGame {
     // Core game components
     ArrayList<Card> deck = new ArrayList<>();
-    int numberofPeople=0;
+
     ArrayList<Card> discardPile = new ArrayList<>();
     Card selectedCard;
     int selectedCardRaiseAmount = 15;
-    ArrayList<Hand> handsofpeople = new ArrayList<>();
+    int numberofPeople=0;
     // Game state
     boolean playerOneTurn = true;
     Card lastPlayedCard;
@@ -23,27 +23,59 @@ public class CardGame {
     int drawButtonWidth = 100;
     int drawButtonHeight = 35;
 
-    public CardGame() {
-        initializeGame();
-        dealCards(6);
+    
+    public ERS() {
+        SelectNumberofPlayers();
     }
-
-    protected void initializeGame() {
+    protected void SelectNumberofPlayers() {
         
+        ClickableRectangle IncreaseButton = new ClickableRectangle();
+        IncreaseButton.x = 200;
+        IncreaseButton.y = 300;
+        IncreaseButton.width = 50;
+        IncreaseButton.height = 50;
+        if (IncreaseButton.isClicked(mouseX,mouseY)) {
+            numberofPeople ++;
+        }
+        ClickableRectangle DecreaseButton = new ClickableRectangle();
+        DecreaseButton.x = 270;
+        DecreaseButton.y = 300;
+        DecreaseButton.width = 50;
+        DecreaseButton.height = 50;
+        if (DecreaseButton.isClicked(mouseX,mouseY)) {
+            numberofPeople --;
+        }
+        ClickableRectangle ConfirmButton = new ClickableRectangle();
+        ConfirmButton.x = 200;
+        ConfirmButton.y = 400;
+        ConfirmButton.width =50;
+        ConfirmButton.height = 50;
+        if (ConfirmButton.isClicked(mouseX,mouseY)) {
+            if(numberofPeople<= 2) {
+                System.out.println("Please select more than 2 players.");
+                break;
+            }
+            dealCards(52/numberofPeople);
+            initializeGame();
+        }
+        
+    }
+    ArrayList<Hand> handsofpeople = new ArrayList<>();
+    protected void initializeGame() {
         // Initialize draw button
         drawButton = new ClickableRectangle();
         drawButton.x = drawButtonX;
         drawButton.y = drawButtonY;
         drawButton.width = drawButtonWidth;
         drawButton.height = drawButtonHeight;
-        
+
         // Initialize decks and hands
         deck = new ArrayList<>();
         discardPile = new ArrayList<>();
         for(int i =0; i<numberofPeople; i++) {
-            Hand h = new Hand();
-            h.name = "Player" + i + "Hand";
-            handsofpeople.add(h);
+            String name = "Player" + i + "Hand";
+            Hand name = new Hand();
+            handsofpeople.add(name);
 
         }
         gameActive = true;
@@ -65,15 +97,29 @@ public class CardGame {
     protected void dealCards(int numCards) {
         Collections.shuffle(deck);
         for (int i = 0; i < numCards; i++) {
-            playerOneHand.addCard(deck.remove(0));
-            Card card = deck.remove(0);
+            for (Hand person : handsofpeople) {
+                person.addCard(deck.remove(0));
+                Card card = deck.remove(0);
             card.setTurned(true);
             playerTwoHand.addCard(card);
+            //fix
+            }
         }
 
-        // position cards
-        playerOneHand.positionCards(50, 450, 80, 120, 20);
-        playerTwoHand.positionCards(50, 50, 80, 120, 20);
+        for (Hand person : handsofpeople) {
+            if (handsofpeople.indexOf(person) == 0) {
+                person.positionCards(300, 450, 80, 120, 0);
+            }
+            if (handsofpeople.indexOf(person) == 1) {
+                person.positionCards(300, 50, 80, 120, 0);
+            }
+            if (handsofpeople.indexOf(person) == 2) {
+                person.positionCards(25, 50, 80, 120, 0);
+            }
+            if (handsofpeople.indexOf(person) == 3) {
+                person.positionCards(500, 50, 80, 120, 0);
+            }
+        }
     }
 
     protected boolean isValidPlay(Card card) {
