@@ -64,7 +64,7 @@ public class CardGame {
             handsofpeople.add(h);
         }
         drawButton = new ClickableRectangle(drawButtonX, drawButtonY, drawButtonWidth, drawButtonHeight);
-        /
+        
         int turn = 0;
         while (!deck.isEmpty()) {
             handsofpeople.get(turn).addCard(deck.remove(0));
