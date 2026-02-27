@@ -5,6 +5,8 @@ import processing.core.PApplet;
 public class Hand {
     private ArrayList<Card> cards;
     public String name = "";
+    public boolean playerTurn = false;
+
     
     public Hand() {
         cards = new ArrayList<>();

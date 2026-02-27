@@ -4,6 +4,7 @@ import processing.core.PApplet;
 public class Card extends ClickableRectangle {
     String value;
     String suit;
+    public boolean turb = false;
     PImage img;
     boolean turned = false;
     private int clickableWidth = 30; // Width of the left sliver that is clickable
