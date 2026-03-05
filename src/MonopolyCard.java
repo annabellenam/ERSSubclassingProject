@@ -28,7 +28,7 @@ public class MonopolyCard extends Card {
                 sketch.fill(255); // white for property cards
                 break;
             case "Action":
-                sketch.fill(255, 182, 193); // light pink for action cards
+                sketch.fill(255, 182, 193);
                 break;
             default:
                 sketch.fill(200);
@@ -42,7 +42,6 @@ public class MonopolyCard extends Card {
         sketch.text("$" + value, x + 10, y + 20);
 
         if (suit == "Money") {
-            // draw a dollar sign in the center
             sketch.textSize(48);
             sketch.text("$" + value, x + width / 2 - 12, y + height / 2 + 16);
             sketch.textSize(14);
@@ -51,7 +50,6 @@ public class MonopolyCard extends Card {
 }
 
 class PropertyCard extends MonopolyCard {
-    // property cards also have a baserent value and a color
     boolean inCompleteSet = false;
     int baseRent;
     String color;

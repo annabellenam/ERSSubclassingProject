@@ -1,12 +1,13 @@
-//WHAT TO DO: ~~ FIX FORMATTING!!! CHECK ERRORS ACTUAL GAME IS NOT SHOWING UP + GAME TITLE 
-
 import processing.core.PApplet;
+import processing.core.PFont;
 
 public class App extends PApplet {
 
-    CardGame cardGame;
-    boolean selectingPlayers = true;
-    int numberOfPlayers = 2;
+    ERS cardGame;
+    boolean selectingPlayers = false;
+    int     numberOfPlayers  = 2;
+    boolean startingGame     = true;
+    boolean gameManual = false;
 
     public static void main(String[] args) {
         PApplet.main("App");
@@ -19,56 +20,70 @@ public class App extends PApplet {
 
     @Override
     public void setup() {
-        cardGame = new ERS(); 
+        PFont font = createFont("Arial", 32, true);
+        textFont(font);
+
+        cardGame = new ERS();
+        surface.setTitle("Egyptian Rat Screw");
     }
 
     @Override
     public void draw() {
-        background(255);
-
+        if (startingGame) {
+            cardGame.startScreen(this);
+            return;
+        }
+        if (gameManual) {
+            cardGame.gameManual(this);
+            return;
+        }
         if (selectingPlayers) {
             cardGame.drawSelectionScreen(this, numberOfPlayers);
             return;
         }
-
         cardGame.drawGame(this);
-
-        // draw draw button
-        cardGame.drawButton.draw(this);
-        fill(0);
-        textAlign(CENTER, CENTER);
-        text("Draw",
-            cardGame.drawButton.x + cardGame.drawButton.width / 2,
-            cardGame.drawButton.y + cardGame.drawButton.height / 2);
     }
 
     @Override
     public void mousePressed() {
-
+        if (startingGame) {
+            if (cardGame.startButton.isClicked(mouseX, mouseY)) {
+                selectingPlayers = true;
+                startingGame     = false;
+            }
+            if (cardGame.gameManualButton.isClicked(mouseX, mouseY)) {
+                gameManual = true;
+                startingGame = false;
+            }
+            return;
+        }
+        if (gameManual) {
+            if (cardGame.exitButton.isClicked(mouseX,mouseY)) {
+                startingGame = true;
+                gameManual = false;
+            }
+        }
         if (selectingPlayers) {
-
-            if (cardGame.increaseButton.isClicked(mouseX, mouseY)) {
-                if (numberOfPlayers < 4) numberOfPlayers++;
-            }
-
-            if (cardGame.decreaseButton.isClicked(mouseX, mouseY)) {
-                if (numberOfPlayers > 2) numberOfPlayers--;
-            }
-
+            if (cardGame.increaseButton.isClicked(mouseX, mouseY) && numberOfPlayers < 4) numberOfPlayers++;
+            if (cardGame.decreaseButton.isClicked(mouseX, mouseY) && numberOfPlayers > 2) numberOfPlayers--;
             if (cardGame.confirmButton.isClicked(mouseX, mouseY)) {
                 cardGame.InitializeGame(numberOfPlayers);
                 selectingPlayers = false;
             }
             return;
         }
-
         cardGame.handleDrawButtonClick(mouseX, mouseY);
     }
 
     @Override
     public void keyPressed() {
-        if (cardGame instanceof ERS) {
-            ((ERS) cardGame).handleSlap(key);
+        if (!startingGame && !selectingPlayers) {
+            if (key == ' ') {
+                int cur = cardGame.getCurrentPlayer();
+                cardGame.playCard(cardGame.handsofpeople.get(cur));
+                return;
+            }
+            cardGame.handleSlap(key);
         }
     }
 }
